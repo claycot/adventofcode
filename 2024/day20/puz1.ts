@@ -63,6 +63,7 @@ function seekEnd(maze: string[][], start: number[], end: number[]) {
 
         // look in all 4 directions
         dirs.forEach(dir => {
+            // the next node will take t + 1 time to visit from the current node
             const newNode = [node[0] + dir[0], node[1] + dir[1], node[2] + 1];
 
             if (checkBounds(maze, newNode) && maze[newNode[0]][newNode[1]] !== "#") {
@@ -99,7 +100,7 @@ function findCheats(maze: string[][]): number[] {
                 const cheatVert = cheat(cellUp, cellDown);
                 if (cheatVert > 0) {
                     cheats.push(cheatVert);
-                }                
+                }
 
                 // check horizontal cheat
                 let cellLeft = [r, c - 1];
@@ -116,11 +117,13 @@ function findCheats(maze: string[][]): number[] {
     return cheats;
 }
 
+// cheat across a wall and return the time saved
 function cheat(cell1: number[], cell2: number[]) {
     let cheat = 0;
     if (finished.hasOwnProperty(getKey(cell1)) && finished.hasOwnProperty(getKey(cell2))) {
         cell1[2] = finished[getKey(cell1)];
         cell2[2] = finished[getKey(cell2)];
+        // time saved by cheating will be equivalent to the diff in time, minus the 2 seconds it takes to cheat
         cheat = Math.abs(cell1[2] - cell2[2]) - 2;
     }
     return cheat;
