@@ -71,7 +71,7 @@ function checkTrie(trie: Record<string, any>, pattern: string): boolean {
     return node.complete;
 }
 
-function checkPattern(trie: Record<string, any>, pattern: string, memo: Record<string, boolean> = {}) {
+function checkPattern(trie: Record<string, any>, pattern: string, memo: Record<string, boolean> = {}): boolean {
     if (memo.hasOwnProperty(pattern)) {
         return memo[pattern];
     }
