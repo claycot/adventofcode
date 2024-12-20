@@ -28,17 +28,15 @@ fileIter.on('line', function (line) {
 fileIter.on('close', function (_) {
     console.log(trie);
 
-    let made = 0;
+    let ways = 0;
 
     // for each goal pattern, use backtracking to attempt to create it
     for (let g = 0; g < goals.length; g++) {
         console.log(`attempting to make pattern ${goals[g]}`);
-        if(checkPattern(trie, goals[g])) {
-            made++;
-        }
+        ways += checkPattern(trie, goals[g]);
     }
 
-    console.log(made);
+    console.log(ways);
     console.log(goals.length);
 });
 
@@ -71,31 +69,34 @@ function checkTrie(trie: Record<string, any>, pattern: string): boolean {
     return node.complete;
 }
 
-function checkPattern(trie: Record<string, any>, pattern: string, memo: Record<string, boolean> = {}) {
+function checkPattern(trie: Record<string, any>, pattern: string, memo: Record<string, number> = {}): number {
+    // if we already know how many ways to make a pattern return that
     if (memo.hasOwnProperty(pattern)) {
         return memo[pattern];
     }
-
     // console.log(`pattern length is ${pattern.length}`);
     
     // if there is no pattern left, we have successfully created it!
     if (!pattern.length) {
-        return true;
+        return 1;
     }
-
+    
+    // track the number of ways to make the pattern
+    let count = 0;
+    
     // attempt to fill as much of the pattern as possible
     for (let c = pattern.length; c > 0; c--) {
         // if length of the pattern from 0 to c can be made with a given towel, attempt to create the rest
         if (checkTrie(trie, pattern.substring(0, c))) {
             // console.log(`covered first ${c} characters of pattern, checking the rest`);
-            if (checkPattern(trie, pattern.substring(c), memo)) {
-                memo[pattern] = true;
-                return true;
-            }
+            // track all of the ways we can make the remaining pattern from this point
+            count += checkPattern(trie, pattern.substring(c), memo);
             // console.log(`that didn't work... let's try covering something shorter`);
         }
     }
-
-    memo[pattern] = false;
-    return false;
+    
+    // memoize how many ways we can make this pattern
+    memo[pattern] = count;
+    // return that value
+    return count;
 }
