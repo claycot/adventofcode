@@ -29,10 +29,10 @@ fileIter.on('close', function (line) {
     console.log(`there are ${numBits} z values`)
     let outWires: Promise<number>[] = Array(numBits);
     
-    Object.keys(wires).filter(wire => wire.charAt(0) === "z").forEach(async wire => {
+    for (const wire of Object.keys(wires).filter(wire => wire.charAt(0) === "z")) {
         const wireNum: number = parseInt(wire.substring(1), 10);
         outWires[wireNum] = wires[wire]();
-    });
+    }
 
     Promise.all(outWires).then(bits => {
         console.log(bits);
@@ -41,24 +41,21 @@ fileIter.on('close', function (line) {
     });
 });
 
-function promiseEquation(equation: string): Promise<number> {
+async function promiseEquation(equation: string): Promise<number> {
     const [w1, op, w2] = equation.split(" ");
+    if (!wires[w1] || !wires[w2]) {
+        throw new Error(`Undefined wire(s) in equation: ${equation}`);
+    }
 
-    return new Promise(async (resolve, reject) => {
-        const [val1, val2] = await Promise.all([wires[w1](), wires[w2]()])
-        let outVal: number = -1;
-        switch (op) {
-            case "OR":
-                outVal = val1 | val2;
-                break;
-            case "AND":
-                outVal = val1 & val2;
-                break;
-            case "XOR":
-                outVal = val1 ^ val2;
-                break;
-        }
-
-        return resolve(outVal);
-    })
+    const [val1, val2] = await Promise.all([wires[w1](), wires[w2]()]);
+    switch (op) {
+        case "OR":
+            return val1 | val2;
+        case "AND":
+            return val1 & val2;
+        case "XOR":
+            return val1 ^ val2;
+        default:
+            throw new Error(`Invalid operation: ${op}`);
+    }
 }

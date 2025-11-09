@@ -33,7 +33,7 @@ fileIter.on('close', function (_) {
     // for each goal pattern, use backtracking to attempt to create it
     for (let g = 0; g < goals.length; g++) {
         console.log(`attempting to make pattern ${goals[g]}`);
-        if(checkPattern(trie, goals[g])) {
+        if (checkPattern(trie, goals[g])) {
             made++;
         }
     }
@@ -77,7 +77,7 @@ function checkPattern(trie: Record<string, any>, pattern: string, memo: Record<s
     }
 
     // console.log(`pattern length is ${pattern.length}`);
-    
+
     // if there is no pattern left, we have successfully created it!
     if (!pattern.length) {
         return true;
