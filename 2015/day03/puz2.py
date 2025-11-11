@@ -1,4 +1,5 @@
 from collections import defaultdict
+from typing import Tuple
 
 def main():
     DIRECTIONS: dict[str, Tuple[int, int]] = {
