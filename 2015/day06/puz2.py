@@ -18,10 +18,10 @@ def main():
             if instruction[1][0] > coordinates[0] or instruction[2][0] < coordinates[0] or instruction[1][1] > coordinates[1] or instruction[2][1] < coordinates[1]:
                 continue
             
-            if instruction[0] == 0:
-                brightness +=1
-            elif instruction[0] == 1 and brightness > 0:
-                brightness -= 1
+            if instruction[0] == 0 and brightness > 0:
+                brightness -=1
+            elif instruction[0] == 1:
+                brightness += 1
             elif instruction[0] == 2:
                 brightness += 2
         
