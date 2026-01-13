@@ -9,14 +9,13 @@ def main():
             for char in line:
                 if char in NUM_CHARS:
                     numStr += char
-                    continue
-                elif len(numStr) > 0:
-                    sum += int(numStr)
+                else:
+                    if len(numStr) > 0:
+                        sum += int(numStr)
                     numStr = ""
-                    
-                if (char == NEG_CHAR):
-                    numStr += char
-    
+                    if (char == NEG_CHAR):
+                        numStr += char
+
     print(sum)
     return sum
 
